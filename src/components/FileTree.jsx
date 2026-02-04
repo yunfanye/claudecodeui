@@ -4,7 +4,7 @@ import { ScrollArea } from './ui/scroll-area';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Checkbox } from './ui/checkbox';
-import { Folder, FolderOpen, File, FileText, FileCode, List, TableProperties, Eye, Search, X, Upload, Loader2, Trash2, Download, CheckSquare, ArrowUpDown, ArrowUp, ArrowDown, Clock } from 'lucide-react';
+import { Folder, FolderOpen, File, FileText, FileCode, List, TableProperties, Eye, Search, X, Upload, Loader2, Trash2, Download, CheckSquare, ArrowUp, ArrowDown } from 'lucide-react';
 
 import CodeEditor from './CodeEditor';
 import ImageViewer from './ImageViewer';
@@ -53,7 +53,7 @@ function FileTree({ selectedProject }) {
   useEffect(() => {
     const savedSortBy = localStorage.getItem('file-tree-sort-by');
     const savedSortOrder = localStorage.getItem('file-tree-sort-order');
-    if (savedSortBy && ['name', 'modified'].includes(savedSortBy)) {
+    if (savedSortBy && ['name', 'size', 'modified'].includes(savedSortBy)) {
       setSortBy(savedSortBy);
     }
     if (savedSortOrder && ['asc', 'desc'].includes(savedSortOrder)) {
@@ -72,6 +72,10 @@ function FileTree({ selectedProject }) {
       let comparison = 0;
       if (field === 'name') {
         comparison = a.name.localeCompare(b.name);
+      } else if (field === 'size') {
+        const sizeA = a.size || 0;
+        const sizeB = b.size || 0;
+        comparison = sizeA - sizeB;
       } else if (field === 'modified') {
         const dateA = a.modified ? new Date(a.modified).getTime() : 0;
         const dateB = b.modified ? new Date(b.modified).getTime() : 0;
@@ -702,31 +706,6 @@ function FileTree({ selectedProject }) {
               <CheckSquare className="w-4 h-4" />
             </Button>
             <div className="w-px bg-border mx-1" />
-            {/* Sort buttons */}
-            <Button
-              variant={sortBy === 'name' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => changeSortBy('name')}
-              title={t('fileTree.sortByName')}
-            >
-              {sortBy === 'name' ? (
-                sortOrder === 'asc' ? <ArrowUp className="w-4 h-4" /> : <ArrowDown className="w-4 h-4" />
-              ) : (
-                <ArrowUpDown className="w-4 h-4" />
-              )}
-            </Button>
-            <Button
-              variant={sortBy === 'modified' ? 'default' : 'ghost'}
-              size="sm"
-              className="h-8 w-8 p-0"
-              onClick={() => changeSortBy('modified')}
-              title={t('fileTree.sortByModified')}
-            >
-              <Clock className={`w-4 h-4 ${sortBy === 'modified' ? '' : 'opacity-60'}`} />
-            </Button>
-            <div className="w-px bg-border mx-1" />
-            {/* View mode buttons */}
             <Button
               variant={viewMode === 'simple' ? 'default' : 'ghost'}
               size="sm"
@@ -881,9 +860,33 @@ function FileTree({ selectedProject }) {
       {viewMode === 'detailed' && filteredFiles.length > 0 && (
         <div className="px-4 pt-2 pb-1 border-b border-border">
           <div className="grid grid-cols-12 gap-2 px-2 text-xs font-medium text-muted-foreground">
-            <div className="col-span-5">{t('fileTree.name')}</div>
-            <div className="col-span-2">{t('fileTree.size')}</div>
-            <div className="col-span-3">{t('fileTree.modified')}</div>
+            <div
+              className="col-span-5 flex items-center gap-1 cursor-pointer hover:text-foreground select-none"
+              onClick={() => changeSortBy('name')}
+            >
+              {t('fileTree.name')}
+              {sortBy === 'name' && (
+                sortOrder === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+              )}
+            </div>
+            <div
+              className="col-span-2 flex items-center gap-1 cursor-pointer hover:text-foreground select-none"
+              onClick={() => changeSortBy('size')}
+            >
+              {t('fileTree.size')}
+              {sortBy === 'size' && (
+                sortOrder === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+              )}
+            </div>
+            <div
+              className="col-span-3 flex items-center gap-1 cursor-pointer hover:text-foreground select-none"
+              onClick={() => changeSortBy('modified')}
+            >
+              {t('fileTree.modified')}
+              {sortBy === 'modified' && (
+                sortOrder === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />
+              )}
+            </div>
             <div className="col-span-2">{t('fileTree.permissions')}</div>
           </div>
         </div>
