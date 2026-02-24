@@ -275,6 +275,15 @@ export async function processBashCommands(content, options = {}) {
 
     try {
       // Execute without shell using execFile with parsed args
+      // Build PATH with all necessary locations
+      const pathEnv = [
+        process.env.PATH,
+        `${process.env.HOME}/.local/bin`,
+        `${process.env.HOME}/.nvm/versions/node/*/bin`,
+        '/usr/local/bin',
+        '/usr/bin'
+      ].filter(Boolean).join(':');
+
       const { stdout, stderr } = await execFileAsync(
         validation.command,
         validation.args,
@@ -283,7 +292,7 @@ export async function processBashCommands(content, options = {}) {
           timeout,
           maxBuffer: 1024 * 1024, // 1MB max output
           shell: false, // IMPORTANT: No shell interpretation
-          env: { ...process.env, PATH: process.env.PATH } // Inherit PATH for finding commands
+          env: { ...process.env, PATH: pathEnv } // Enhanced PATH for finding commands
         }
       );
 

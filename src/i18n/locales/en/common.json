@@ -118,7 +118,7 @@
     "daysAgo": "{{count}} days ago",
     "uploadFiles": "Upload files",
     "uploading": "Uploading files...",
-    "fileTooLarge": "File \"{{name}}\" exceeds 100MB limit",
+    "fileTooLarge": "File \"{{name}}\" exceeds 1.1GB limit",
     "uploadFailed": "Upload failed: {{error}}",
     "delete": "Delete",
     "confirmDelete": "Delete?",

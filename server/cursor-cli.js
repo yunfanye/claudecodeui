@@ -57,10 +57,34 @@ async function spawnCursor(command, options = {}, ws) {
     console.log('Working directory:', workingDir);
     console.log('Session info - Input sessionId:', sessionId, 'Resume:', resume);
     
+    // Build PATH with all necessary locations
+    const pathEnv = [
+      process.env.PATH,
+      `${process.env.HOME}/.local/bin`,
+      `${process.env.HOME}/.nvm/versions/node/*/bin`,
+      '/usr/local/bin',
+      '/usr/bin'
+    ].filter(Boolean).join(':');
+
+    // Create minimal clean environment to prevent CLAUDECODE nested session error
+    // Claude CLI checks truthiness, so we explicitly set it to empty string
+    const subprocessEnv = {
+      PATH: pathEnv,
+      HOME: process.env.HOME,
+      USER: process.env.USER,
+      SHELL: process.env.SHELL || '/bin/bash',
+      TERM: process.env.TERM || 'xterm-256color',
+      LANG: process.env.LANG || 'en_US.UTF-8',
+      // Explicitly set to empty string - prevents nested session check
+      CLAUDECODE: ''
+    };
+
+    console.log('[DEBUG] Launching cursor-agent with minimal clean environment (CLAUDECODE cleared)');
+
     const cursorProcess = spawnFunction('cursor-agent', args, {
       cwd: workingDir,
       stdio: ['pipe', 'pipe', 'pipe'],
-      env: { ...process.env } // Inherit all environment variables
+      env: subprocessEnv
     });
     
     // Store process reference for potential abort

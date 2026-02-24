@@ -118,7 +118,7 @@
     "daysAgo": "{{count}} 天前",
     "uploadFiles": "上传文件",
     "uploading": "正在上传文件...",
-    "fileTooLarge": "文件 \"{{name}}\" 超过100MB限制",
+    "fileTooLarge": "文件 \"{{name}}\" 超过1.1GB限制",
     "uploadFailed": "上传失败: {{error}}",
     "delete": "删除",
     "confirmDelete": "确认删除？",

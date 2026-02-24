@@ -247,8 +247,8 @@ function FileTree({ selectedProject }) {
     const files = Array.from(event.target.files || []);
     if (files.length === 0) return;
 
-    // Client-side size validation (100MB)
-    const maxSize = 100 * 1024 * 1024;
+    // Client-side size validation (1.1GB)
+    const maxSize = 1.1 * 1024 * 1024 * 1024;
     for (const file of files) {
       if (file.size > maxSize) {
         setUploadError(t('fileTree.fileTooLarge', { name: file.name }));

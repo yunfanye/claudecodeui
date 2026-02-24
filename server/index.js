@@ -1666,7 +1666,7 @@ app.post('/api/projects/:projectName/upload-files', authenticateToken, async (re
         const upload = multer({
             storage,
             limits: {
-                fileSize: 100 * 1024 * 1024, // 100MB
+                fileSize: 1.1 * 1024 * 1024 * 1024, // 1.1GB
                 files: 10
             }
         });
@@ -1675,7 +1675,7 @@ app.post('/api/projects/:projectName/upload-files', authenticateToken, async (re
         upload.array('files', 10)(req, res, async (err) => {
             if (err) {
                 if (err.code === 'LIMIT_FILE_SIZE') {
-                    return res.status(400).json({ error: 'File exceeds 100MB size limit' });
+                    return res.status(400).json({ error: 'File exceeds 1.1GB size limit' });
                 }
                 return res.status(400).json({ error: err.message });
             }

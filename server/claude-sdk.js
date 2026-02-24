@@ -215,11 +215,11 @@ async function mapCliOptionsToSDK(options = {}) {
 
       // Replace currentModel with appropriate model name
       const modelName = sdkOptions.model || 'sonnet';
-      let currentModel = 'Claude Sonnet 4.5';
+      let currentModel = 'Claude Sonnet 4.6';
       if (modelName.toLowerCase().includes('opus')) {
-        currentModel = 'Claude Opus 4.5';
+        currentModel = 'Claude Opus 4.6';
       } else if (modelName.toLowerCase().includes('haiku')) {
-        currentModel = 'Claude Haiku 4.5';
+        currentModel = 'Claude Haiku 4.6';
       }
       systemPromptContent = systemPromptContent.replace(/currentModel/g, currentModel);
 
